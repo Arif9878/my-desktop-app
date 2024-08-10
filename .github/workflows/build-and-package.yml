@@ -1,0 +1,57 @@
+name: Build and Package Wails Application
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.20'
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build Wails application
+        run: wails build
+
+      - name: Create macOS DMG
+        if: runner.os == 'macOS'
+        run: |
+          # Install create-dmg
+          npm install -g create-dmg
+
+          # Create DMG installer
+          create-dmg 'build/macos/mydesktopapp.app' 'build/macos/mydesktopapp.dmg' --overwrite
+
+      - name: Create Windows Installer
+        if: runner.os == 'windows'
+        run: |
+          # Assuming you have Inno Setup or NSIS installed
+          # Build the installer using Inno Setup or NSIS scripts
+          # For example, using Inno Setup:
+          InnoSetupCompiler /COMPONENTS "all" /CONFIG "installer.iss"
+
+      - name: Upload macOS DMG
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v3
+        with:
+          name: macOS-installer
+          path: ./build/macos/mydesktopapp.dmg
+
+      - name: Upload Windows Installer
+        if: runner.os == 'windows'
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-installer
+          path: ./build/windows/mydesktopapp.exe
