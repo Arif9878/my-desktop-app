@@ -38,7 +38,7 @@ jobs:
           npm install -g create-dmg
 
           # Create DMG installer
-          create-dmg 'build/bin/my-desktop-app.app' 'build/bin' --overwrite
+          create-dmg 'build/bin/my-desktop-app.app' --overwrite
 
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v3
@@ -64,11 +64,12 @@ jobs:
       - name: Build Wails application
         run: wails build
 
-      - name: Create Windows Installer
+      - name: Install Inno Setup
+        run: choco install innosetup --version 6.3.2 -y
+
+      - name: Build Windows Installer
         run: |
-          # Assuming you have Inno Setup or NSIS installed
-          # For example, using Inno Setup:
-          InnoSetupCompiler /COMPONENTS "all" /CONFIG "installer.iss"
+          Inno Setup /COMPONENTS "all" /CONFIG "installer.iss"
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v3
