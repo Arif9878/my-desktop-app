@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-macos:
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -21,10 +21,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libgtk-3-dev \
-            libwebkit2gtk-4.0-dev
+          brew install gtk+3 webkit2gtk
 
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
@@ -33,7 +30,6 @@ jobs:
         run: wails build
 
       - name: Create macOS DMG
-        if: runner.os == 'macOS'
         run: |
           # Install create-dmg
           npm install -g create-dmg
@@ -41,23 +37,38 @@ jobs:
           # Create DMG installer
           create-dmg 'build/macos/mydesktopapp.app' 'build/macos/mydesktopapp.dmg' --overwrite
 
-      - name: Create Windows Installer
-        if: runner.os == 'windows'
-        run: |
-          # Assuming you have Inno Setup or NSIS installed
-          # Build the installer using Inno Setup or NSIS scripts
-          # For example, using Inno Setup:
-          InnoSetupCompiler /COMPONENTS "all" /CONFIG "installer.iss"
-
       - name: Upload macOS DMG
-        if: runner.os == 'macOS'
         uses: actions/upload-artifact@v3
         with:
           name: macOS-installer
           path: ./build/macos/mydesktopapp.dmg
 
+  build-windows:
+    runs-on: windows-latest
+    needs: build-macos
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build Wails application
+        run: wails build
+
+      - name: Create Windows Installer
+        run: |
+          # Assuming you have Inno Setup or NSIS installed
+          # For example, using Inno Setup:
+          InnoSetupCompiler /COMPONENTS "all" /CONFIG "installer.iss"
+
       - name: Upload Windows Installer
-        if: runner.os == 'windows'
         uses: actions/upload-artifact@v3
         with:
           name: windows-installer
