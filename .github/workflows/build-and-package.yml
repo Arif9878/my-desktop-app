@@ -33,13 +33,12 @@ jobs:
           ls -la build/bin
 
       - name: Create macOS DMG
-        if: runner.os == 'macOS'
         run: |
           # Install create-dmg
           npm install -g create-dmg
 
           # Create DMG installer
-          create-dmg 'build/bin/my-desktop-app.app' 'build/bin/my-desktop-app.dmg' --overwrite
+          create-dmg 'build/bin/my-desktop-app.app' 'build/bin' --overwrite
 
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v3
@@ -49,7 +48,6 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    needs: build-macos
 
     steps:
       - name: Checkout code
