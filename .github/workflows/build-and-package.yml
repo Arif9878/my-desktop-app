@@ -35,7 +35,9 @@ jobs:
           go-version: '1.21'
 
       - name: List build directory
-        run: dir .\build\bin\
+        run: |
+          dir .\build\bin\
+          dir .\build\bin\My
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v3
