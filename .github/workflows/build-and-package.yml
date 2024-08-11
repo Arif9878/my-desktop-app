@@ -45,8 +45,13 @@ jobs:
 
       - name: Ensure SQLite DLL is included
         run: |
-          $sourcePath = "${{ github.workspace }}\build\package\sqlite3.dll"
-          $destinationPath = "${{ github.workspace }}\build\bin\My\"
+          $sourcePath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\package\sqlite3.dll"
+          $destinationPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\bin\My\"
+
+          # Debugging output
+          Write-Host "Source Path: $sourcePath"
+          Write-Host "Destination Path: $destinationPath"
+
           if (Test-Path -Path $sourcePath) {
             if (-not (Test-Path -Path $destinationPath)) {
               New-Item -Path $destinationPath -ItemType Directory -Force
