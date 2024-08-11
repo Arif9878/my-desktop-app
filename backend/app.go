@@ -2,8 +2,9 @@ package backend
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+
+	"github.com/jinzhu/gorm"
 
 	"github.com/Arif9878/my-desktop-app/backend/internal"
 )
@@ -11,7 +12,7 @@ import (
 // App struct
 type App struct {
 	ctx context.Context
-	db  *sql.DB
+	db  *gorm.DB
 }
 
 // NewApp creates a new App application struct
@@ -19,8 +20,8 @@ func NewApp() *App {
 	return &App{}
 }
 
-// startup is called when the app starts. The context is saved
-// so we can call the runtime methods
+// OnStartup is called when the app starts. The context is saved
+// so we can call the runtime methods.
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
 	a.db = internal.InitDB()
@@ -31,30 +32,16 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
+// CreateItem creates a new item in the database.
 func (a *App) CreateItem(name string) error {
-	_, err := a.db.Exec("INSERT INTO items (name) VALUES (?)", name)
-	return err
+	item := &internal.Item{Name: name}
+	result := a.db.Create(item)
+	return result.Error
 }
 
-func (a *App) GetItems() ([]Item, error) {
-	rows, err := a.db.Query("SELECT id, name FROM items")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var items []Item
-	for rows.Next() {
-		var item Item
-		if err := rows.Scan(&item.ID, &item.Name); err != nil {
-			return nil, err
-		}
-		items = append(items, item)
-	}
-	return items, nil
-}
-
-type Item struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+// GetItems retrieves all items from the database.
+func (a *App) GetItems() ([]internal.Item, error) {
+	var items []internal.Item
+	result := a.db.Find(&items)
+	return items, result.Error
 }

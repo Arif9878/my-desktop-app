@@ -3,7 +3,7 @@
       <input v-model="newItemName" placeholder="New item name" />
       <button @click="addItem">Add Item</button>
       <ul>
-        <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+        <li v-for="item in items" :key="item.ID">{{ item.Name }}</li>
       </ul>
     </div>
   </template>
