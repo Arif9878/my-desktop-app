@@ -69,7 +69,7 @@ jobs:
 
       - name: Build Windows Installer
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /COMPONENTS=all /CONFIG=installer.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v3
