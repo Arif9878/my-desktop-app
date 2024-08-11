@@ -40,9 +40,21 @@ jobs:
           package: false
           go-version: '1.21'
 
+      - name: List build package directory
+        run: dir .\build\package\
+
       - name: Ensure SQLite DLL is included
         run: |
-          Copy-Item -Path .\build\package\sqlite3.dll -Destination .\build\bin\My\ -Force
+          $sourcePath = "${{ github.workspace }}\build\package\sqlite3.dll"
+          $destinationPath = "${{ github.workspace }}\build\bin\My\"
+          if (Test-Path -Path $sourcePath) {
+            if (-not (Test-Path -Path $destinationPath)) {
+              New-Item -Path $destinationPath -ItemType Directory -Force
+            }
+            Copy-Item -Path $sourcePath -Destination $destinationPath -Force
+          } else {
+            Write-Error "Source DLL not found: $sourcePath"
+          }
 
       - name: List build directory
         run: |
