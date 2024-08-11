@@ -4,6 +4,7 @@ import (
 	"embed"
 
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 
@@ -19,9 +20,10 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "my-desktop-app",
-		Width:  1024,
-		Height: 768,
+		Title:    "my-desktop-app",
+		Width:    1024,
+		Height:   768,
+		LogLevel: logger.DEBUG, // Log Level
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

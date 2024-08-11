@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
+	"github.com/Arif9878/my-desktop-app/backend/internal"
 )
 
 // App struct
@@ -21,7 +23,7 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) OnStartup(ctx context.Context) {
 	a.ctx = ctx
-	// a.db = internal.InitDB()
+	a.db = internal.InitDB()
 }
 
 // Greet returns a greeting for the given name

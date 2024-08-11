@@ -26,6 +26,12 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Install dependencies
+        run: |
+          go get -u github.com/mattn/go-sqlite3
+          go get -u github.com/go-sql-driver/mysql
+          go get -u github.com/lib/pq
+
       - name: Build Wails application
         uses: dAppServer/wails-build-action@v2.2
         with:
@@ -34,10 +40,14 @@ jobs:
           package: false
           go-version: '1.21'
 
+      - name: Ensure SQLite DLL is included
+        run: |
+          mkdir -p .\build\bin\MyApp
+          copy C:\path\to\sqlite3.dll .\build\bin\MyApp\
+
       - name: List build directory
         run: |
           dir .\build\bin\
-          dir .\build\bin\My
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v3
