@@ -7,44 +7,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  # build-macos:
+  #   runs-on: macos-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.21'
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version: '1.21'
 
-      - name: Install Dependencies
-        run: |
-          brew install gtk+3
+  #     - name: Install Dependencies
+  #       run: |
+  #         brew install gtk+3
 
-      - name: Install Wails CLI
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+  #     - name: Install Wails CLI
+  #       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
   
-      - name: Build Wails application
-        run: |
-          wails build
-          # List contents of build directory to verify output
-          ls -la build/bin
+  #     - name: Build Wails application
+  #       run: |
+  #         wails build
+  #         # List contents of build directory to verify output
+  #         ls -la build/bin
 
-      - name: Create macOS DMG
-        run: |
-          # Install create-dmg
-          npm install -g create-dmg
+  #     - name: Create macOS DMG
+  #       run: |
+  #         # Install create-dmg
+  #         npm install -g create-dmg
 
-          # Create DMG installer
-          create-dmg 'build/bin/my-desktop-app.app' --overwrite
+  #         # Create DMG installer
+  #         create-dmg 'build/bin/my-desktop-app.app' --overwrite
 
-      - name: Upload macOS DMG
-        uses: actions/upload-artifact@v3
-        with:
-          name: macOS-installer
-          path: ./build/macos/my-desktop-app.dmg
+  #     - name: Upload macOS DMG
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: macOS-installer
+  #         path: ./build/macos/my-desktop-app.dmg
 
   build-windows:
     runs-on: windows-latest
@@ -65,7 +65,7 @@ jobs:
         run: wails build
 
       - name: Install Inno Setup
-        run: choco install innosetup --version 6.3.2 -y
+        run: choco install innosetup --version 6.3.2 -y --force
 
       - name: Build Windows Installer
         run: |
