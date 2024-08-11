@@ -1,54 +1,17 @@
-name: Build and Package Wails Application
+name: Wails Windows Build
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    tags:
+      - '*'
+
+env:
+  # Increase memory limit to prevent OOM issues
+  NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-  # build-macos:
-  #   runs-on: macos-latest
-
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Set up Go
-  #       uses: actions/setup-go@v3
-  #       with:
-  #         go-version: '1.21'
-
-  #     - name: Install Dependencies
-  #       run: |
-  #         brew install gtk+3
-
-  #     - name: Install Wails CLI
-  #       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-  
-  #     - name: Build Wails application
-  #       run: |
-  #         wails build
-  #         # List contents of build directory to verify output
-  #         ls -la build/bin
-
-  #     - name: Create macOS DMG
-  #       run: |
-  #         # Install create-dmg
-  #         npm install -g create-dmg
-
-  #         # Create DMG installer
-  #         create-dmg 'build/bin/my-desktop-app.app' --overwrite
-
-  #     - name: Upload macOS DMG
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: macOS-installer
-  #         path: ./build/macos/my-desktop-app.dmg
-
   build-windows:
     runs-on: windows-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -58,30 +21,16 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: Install Wails CLI
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-
       - name: Build Wails application
-        run: wails build
-
-      - name: Install Inno Setup
-        run: choco install innosetup --version 6.3.2 -y --force
-
-      - name: Debug - List Files
-        run: |
-          echo "Listing contents of the directory:"
-          dir
-          echo "Searching for installer.iss file:"
-          dir /s installer.iss
-          echo "Inno Setup Executable:"
-          dir "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-
-      - name: Build Windows Installer
-        run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+        uses: dAppServer/wails-build-action@v2.2
+        with:
+          build-name: 'My Desktop App'
+          build-platform: 'windows/amd64'
+          package: false
+          go-version: '1.21'
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v3
         with:
           name: windows-installer
-          path: ./build/windows/my-desktop-app.exe
+          path: ./build/windows/MyDesktopApp.exe
