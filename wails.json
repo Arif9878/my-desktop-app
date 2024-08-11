@@ -9,5 +9,12 @@
   "author": {
     "name": "Arif Wicaksono",
     "email": "arif.wicaksono@stockbit.com"
+  },
+  "Info": {
+    "companyName": "My Company Name",
+    "productName": "Wails Vite",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright @Arif9878",
+    "comments": "Built using Wails (https://wails.io)"
   }
 }
