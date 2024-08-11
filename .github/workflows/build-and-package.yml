@@ -40,14 +40,9 @@ jobs:
           package: false
           go-version: '1.21'
 
-      - name: Download SQLite DLL
-        run: |
-          Invoke-WebRequest -Uri https://example.com/path/to/sqlite3.dll -OutFile sqlite3.dll
-
       - name: Ensure SQLite DLL is included
         run: |
-          mkdir -p .\build\bin\MyApp
-          Copy-Item -Path .\sqlite3.dll -Destination .\build\bin\MyApp\
+          Copy-Item -Path .\build\package\sqlite3.dll -Destination .\build\bin\MyApp\ -Force
 
       - name: List build directory
         run: |
