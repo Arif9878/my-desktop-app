@@ -1,14 +1,13 @@
 <script setup>
-// import HelloWorld from './components/HelloWorld.vue'
-import MyComponent from './components/MyComponent.vue'
+import HelloWorld from '@/components/HelloWorld.vue'
 </script>
 
 <template>
-  <!-- <img id="logo" alt="Wails logo" src="./assets/images/logo-universal.png"/> -->
-  <MyComponent/>
+  <img id="logo" alt="Wails logo" src="./assets/images/logo-universal.png"/>
+  <HelloWorld/>
 </template>
 
-<!-- <style>
+<style>
 #logo {
   display: block;
   width: 50%;
@@ -20,4 +19,4 @@ import MyComponent from './components/MyComponent.vue'
   background-size: 100% 100%;
   background-origin: content-box;
 }
-</style> -->
+</style>
