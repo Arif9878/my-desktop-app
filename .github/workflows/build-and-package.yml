@@ -1,72 +1,72 @@
-name: Wails Windows Build
+# name: Wails Windows Build
 
+# # on:
+# #   push:
+# #     tags:
+# #       - '*'
 # on:
 #   push:
-#     tags:
-#       - '*'
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+#     branches:
+#       - main
+#   workflow_dispatch:
 
-env:
-  # Increase memory limit to prevent OOM issues
-  NODE_OPTIONS: "--max-old-space-size=4096"
+# env:
+#   # Increase memory limit to prevent OOM issues
+#   NODE_OPTIONS: "--max-old-space-size=4096"
 
-jobs:
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# jobs:
+#   build-windows:
+#     runs-on: windows-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.21'
+#       - name: Set up Go
+#         uses: actions/setup-go@v3
+#         with:
+#           go-version: '1.21'
 
-      - name: Install dependencies
-        run: |
-          go get -u github.com/mattn/go-sqlite3
-          go get -u github.com/go-sql-driver/mysql
-          go get -u github.com/lib/pq
+#       - name: Install dependencies
+#         run: |
+#           go get -u github.com/mattn/go-sqlite3
+#           go get -u github.com/go-sql-driver/mysql
+#           go get -u github.com/lib/pq
 
-      - name: Build Wails application
-        uses: dAppServer/wails-build-action@v2.2
-        with:
-          build-name: 'My Desktop App'
-          build-platform: 'windows/amd64'
-          package: false
-          go-version: '1.21'
+#       - name: Build Wails application
+#         uses: dAppServer/wails-build-action@v2.2
+#         with:
+#           build-name: 'My Desktop App'
+#           build-platform: 'windows/amd64'
+#           package: false
+#           go-version: '1.21'
 
-      - name: List build package directory
-        run: dir .\build\package\
+#       - name: List build package directory
+#         run: dir .\build\package\
 
-      - name: Ensure SQLite DLL is included
-        run: |
-          $sourcePath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\package\sqlite3.dll"
-          $destinationPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\bin\"
+#       - name: Ensure SQLite DLL is included
+#         run: |
+#           $sourcePath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\package\sqlite3.dll"
+#           $destinationPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "build\bin\"
 
-          # Debugging output
-          Write-Host "Source Path: $sourcePath"
-          Write-Host "Destination Path: $destinationPath"
+#           # Debugging output
+#           Write-Host "Source Path: $sourcePath"
+#           Write-Host "Destination Path: $destinationPath"
 
-          if (Test-Path -Path $sourcePath) {
-            if (-not (Test-Path -Path $destinationPath)) {
-              New-Item -Path $destinationPath -ItemType Directory -Force
-            }
-            Copy-Item -Path $sourcePath -Destination $destinationPath -Force
-          } else {
-            Write-Error "Source DLL not found: $sourcePath"
-          }
+#           if (Test-Path -Path $sourcePath) {
+#             if (-not (Test-Path -Path $destinationPath)) {
+#               New-Item -Path $destinationPath -ItemType Directory -Force
+#             }
+#             Copy-Item -Path $sourcePath -Destination $destinationPath -Force
+#           } else {
+#             Write-Error "Source DLL not found: $sourcePath"
+#           }
 
-      - name: List build directory
-        run: |
-          dir .\build\bin\
+#       - name: List build directory
+#         run: |
+#           dir .\build\bin\
 
-      - name: Upload Windows Installer
-        uses: actions/upload-artifact@v3
-        with:
-          name: windows-installer
-          path: ./build/bin/my-desktop-app-amd64-installer.exe
+#       - name: Upload Windows Installer
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: windows-installer
+#           path: ./build/bin/my-desktop-app-amd64-installer.exe

@@ -2,6 +2,8 @@ package main
 
 import (
 	"embed"
+	"os"
+	"runtime"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -15,6 +17,10 @@ import (
 var assets embed.FS
 
 func main() {
+	if runtime.GOOS != "windows" {
+		os.Setenv("PATH", "/usr/bin:/sbin") // This is neccessary when interacting with the CLI on RedHat and other linux distros
+	}
+
 	// Create an instance of the app structure
 	app := backend.NewApp()
 
