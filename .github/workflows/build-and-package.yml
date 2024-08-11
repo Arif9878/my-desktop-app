@@ -67,6 +67,15 @@ jobs:
       - name: Install Inno Setup
         run: choco install innosetup --version 6.3.2 -y --force
 
+      - name: Debug - List Files
+        run: |
+          echo "Listing contents of the directory:"
+          dir
+          echo "Searching for installer.iss file:"
+          dir /s installer.iss
+          echo "Inno Setup Executable:"
+          dir "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+
       - name: Build Windows Installer
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
