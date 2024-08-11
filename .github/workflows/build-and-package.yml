@@ -42,7 +42,7 @@ jobs:
 
       - name: Ensure SQLite DLL is included
         run: |
-          Copy-Item -Path .\build\package\sqlite3.dll -Destination .\build\bin\MyApp\ -Force
+          Copy-Item -Path .\build\package\sqlite3.dll -Destination .\build\bin\My\ -Force
 
       - name: List build directory
         run: |
